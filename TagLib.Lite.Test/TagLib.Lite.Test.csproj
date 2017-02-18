@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>TagLib.Lite.Test</AssemblyName>
+    <PackageId>TagLib.Lite.Test</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8</PackageTargetFallback>
+    <RuntimeFrameworkVersion>1.0.3</RuntimeFrameworkVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="samples\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TagLib.Lite\TagLib.Lite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
+    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-3" />
+    <PackageReference Include="NUnit" Version="3.6.0" />
+  </ItemGroup>
+
+</Project>
