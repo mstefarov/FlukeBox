@@ -6,7 +6,7 @@ using File = TagLib.File;
 
 namespace FlukeBox.Services {
     public class MetadataService {
-        public TrackFull ReadTrack(string id, string path) {
+        public TrackFull ReadTrack(int id, string path) {
             using (File file = File.Create(new File.LocalFileAbstraction(path))) {
 
                 MediaFormat mf = IdentifyFormat(file);
@@ -14,7 +14,7 @@ namespace FlukeBox.Services {
 
                 Tag tag = file.Tag;
                 return new TrackFull {
-                    ID = 123,
+                    ID = id,
                     TrackNumber = tag.Track,
                     FileName = Path.GetFileName(path),
                     Title = tag.Title,
