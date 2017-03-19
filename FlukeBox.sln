@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlukeBox", "FlukeBox\FlukeBox.csproj", "{17168326-51E9-4969-92DF-7D563EA417DC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagLib.Lite", "TagLib.Lite\TagLib.Lite.csproj", "{E2472C57-2663-438E-8190-1DC5AA8B7B26}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagLib.Lite.Test", "TagLib.Lite.Test\TagLib.Lite.Test.csproj", "{3A658F61-20BE-4C43-AF5F-A68AC4C8EB27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagLib.Lite.Test.Runner", "TagLib.Lite.Test.Runner\TagLib.Lite.Test.Runner.csproj", "{704CD7DE-17FC-40DE-B38C-B2251B44B99B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,18 @@ Global
 		{3A658F61-20BE-4C43-AF5F-A68AC4C8EB27}.Release|x64.Build.0 = Release|Any CPU
 		{3A658F61-20BE-4C43-AF5F-A68AC4C8EB27}.Release|x86.ActiveCfg = Release|Any CPU
 		{3A658F61-20BE-4C43-AF5F-A68AC4C8EB27}.Release|x86.Build.0 = Release|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Debug|x64.Build.0 = Debug|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Debug|x86.Build.0 = Debug|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Release|x64.ActiveCfg = Release|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Release|x64.Build.0 = Release|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Release|x86.ActiveCfg = Release|Any CPU
+		{704CD7DE-17FC-40DE-B38C-B2251B44B99B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

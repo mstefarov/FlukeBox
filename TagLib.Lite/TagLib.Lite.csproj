@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <DebugType>portable</DebugType>
-    <AssemblyName>TagLib.Lite</AssemblyName>
-    <PackageId>TagLib.Lite</PackageId>
   </PropertyGroup>
 
 </Project>
