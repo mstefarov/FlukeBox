@@ -18,15 +18,15 @@ namespace FlukeBox.Jobs {
         public class Registry : IJobRegistry, IDisposable {
             private static readonly TimeSpan MaxJobAge = TimeSpan.FromDays(7);
 
-            private readonly object jobsSyncRoot = new object();
-            private readonly Dictionary<Guid, GoodJob> jobsByGuid = new Dictionary<Guid, GoodJob>();
-            private readonly Dictionary<string, GoodJob> jobsByTag = new Dictionary<string, GoodJob>();
-            private readonly Timer cleanupTimer;
+            private readonly object _jobsSyncRoot = new object();
+            private readonly Dictionary<Guid, GoodJob> _jobsByGuid = new Dictionary<Guid, GoodJob>();
+            private readonly Dictionary<string, GoodJob> _jobsByTag = new Dictionary<string, GoodJob>();
+            private readonly Timer _cleanupTimer;
 
             [UsedImplicitly]
             public Registry() {
                 // Clean up old jobs once per hour
-                cleanupTimer = new Timer(unused => CleanUpOldJobs(),
+                _cleanupTimer = new Timer(unused => CleanUpOldJobs(),
                                          null,
                                          TimeSpan.Zero,
                                          TimeSpan.FromHours(1));
@@ -40,17 +40,17 @@ namespace FlukeBox.Jobs {
                     throw new ArgumentNullException(nameof(action));
                 }
                 var job = new GoodJob(tag, action);
-                lock (jobsSyncRoot) {
-                    jobsByTag[tag] = job;
-                    jobsByGuid.Add(job.Guid, job);
+                lock (_jobsSyncRoot) {
+                    _jobsByTag[tag] = job;
+                    _jobsByGuid.Add(job.Guid, job);
                 }
                 return job;
             }
 
             public IJob Find(Guid id) {
                 GoodJob job;
-                lock (jobsSyncRoot) {
-                    jobsByGuid.TryGetValue(id, out job);
+                lock (_jobsSyncRoot) {
+                    _jobsByGuid.TryGetValue(id, out job);
                 }
                 return job;
             }
@@ -60,15 +60,15 @@ namespace FlukeBox.Jobs {
                     throw new ArgumentNullException(nameof(tag));
                 }
                 GoodJob job;
-                lock (jobsSyncRoot) {
-                    jobsByTag.TryGetValue(tag, out job);
+                lock (_jobsSyncRoot) {
+                    _jobsByTag.TryGetValue(tag, out job);
                 }
                 return job;
             }
 
             public IReadOnlyList<IJob> GetRunningJobs() {
-                lock (jobsSyncRoot) {
-                    return jobsByGuid.Values
+                lock (_jobsSyncRoot) {
+                    return _jobsByGuid.Values
                                      .Where(job => job.State == JobState.Running)
                                      .ToArray();
                 }
@@ -76,36 +76,36 @@ namespace FlukeBox.Jobs {
 
             public IReadOnlyList<IJob> GetRecentJobs(TimeSpan period) {
                 DateTime minStartDate = DateTime.UtcNow - period;
-                lock (jobsSyncRoot) {
-                    return jobsByGuid.Values
+                lock (_jobsSyncRoot) {
+                    return _jobsByGuid.Values
                                      .Where(job => job.TimeStarted >= minStartDate)
                                      .ToArray();
                 }
             }
 
             public IReadOnlyList<IJob> GetAllJobs() {
-                lock (jobsSyncRoot) {
-                    return jobsByGuid.Values.ToArray();
+                lock (_jobsSyncRoot) {
+                    return _jobsByGuid.Values.ToArray();
                 }
             }
 
             private void CleanUpOldJobs() {
-                lock (jobsSyncRoot) {
+                lock (_jobsSyncRoot) {
                     foreach (GoodJob job in GetRecentJobs(MaxJobAge)) {
                         if (job.HasFinished) {
-                            jobsByGuid.Remove(job.Guid);
+                            _jobsByGuid.Remove(job.Guid);
                             job.Dispose();
                         }
                     }
-                    var oldJobsByTag = jobsByTag.Values.Where(job => !jobsByGuid.ContainsKey(job.Guid)).ToArray();
+                    var oldJobsByTag = _jobsByTag.Values.Where(job => !_jobsByGuid.ContainsKey(job.Guid)).ToArray();
                     foreach (GoodJob backgroundJob in oldJobsByTag) {
-                        jobsByTag.Remove(backgroundJob.Tag);
+                        _jobsByTag.Remove(backgroundJob.Tag);
                     }
                 }
             }
 
             public void Dispose() {
-                cleanupTimer?.Dispose();
+                _cleanupTimer?.Dispose();
             }
         }
 
@@ -116,25 +116,25 @@ namespace FlukeBox.Jobs {
         public BackgroundAction Action { get; }
 
         public ProgressReport Progress {
-            get { return progress; }
+            get { return _progress; }
             private set {
-                progress = value;
+                _progress = value;
                 OnPropertyChanged();
             }
         }
 
         public JobState State {
-            get { return state; }
+            get { return _state; }
             private set {
-                state = value;
+                _state = value;
                 OnPropertyChanged();
             }
         }
 
         public Exception Error {
-            get { return error; }
+            get { return _error; }
             private set {
-                error = value;
+                _error = value;
                 OnPropertyChanged();
             }
         }
@@ -143,11 +143,11 @@ namespace FlukeBox.Jobs {
 
         public string Tag { get; }
 
-        private readonly object syncRoot = new object();
-        private readonly CancellationTokenSource cancellator = new CancellationTokenSource();
-        private ProgressReport progress;
-        private JobState state = JobState.Created;
-        private Exception error;
+        private readonly object _syncRoot = new object();
+        private readonly CancellationTokenSource _cancellator = new CancellationTokenSource();
+        private ProgressReport _progress;
+        private JobState _state = JobState.Created;
+        private Exception _error;
 
         private GoodJob(string tag, BackgroundAction action) {
             Action = action;
@@ -156,11 +156,11 @@ namespace FlukeBox.Jobs {
 
         public bool HasStarted => !(State == JobState.Created || State == JobState.Scheduled);
         public bool HasFinished => (State == JobState.Done || State == JobState.Crashed || State == JobState.Canceled);
-        public bool IsCancellationRequested => cancellator.IsCancellationRequested;
+        public bool IsCancellationRequested => _cancellator.IsCancellationRequested;
 
         public bool Cancel() {
             if (State == JobState.Done || State == JobState.Crashed) return false;
-            cancellator.Cancel();
+            _cancellator.Cancel();
             return true;
         }
 
@@ -169,7 +169,7 @@ namespace FlukeBox.Jobs {
         }
 
         public Task CreateTask() {
-            lock (syncRoot) {
+            lock (_syncRoot) {
                 if (State != JobState.Created)
                     throw new InvalidOperationException($"Can't create task: job already {State}");
                 State = JobState.Scheduled;
@@ -185,14 +185,14 @@ namespace FlukeBox.Jobs {
             try {
                 TimeStarted = DateTime.UtcNow;
                 State = JobState.Running;
-                if (!cancellator.IsCancellationRequested && Action.Invoke(this, cancellator.Token)) {
+                if (!_cancellator.IsCancellationRequested && Action.Invoke(this, _cancellator.Token)) {
                     State = JobState.Done;
                 } else {
                     State = JobState.Canceled;
                 }
             } catch (Exception ex) {
                 Error = ex;
-                lock (syncRoot) {
+                lock (_syncRoot) {
                     State = JobState.Crashed;
                 }
             }
@@ -200,7 +200,7 @@ namespace FlukeBox.Jobs {
         }
 
         public void Dispose() {
-            cancellator?.Dispose();
+            _cancellator?.Dispose();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

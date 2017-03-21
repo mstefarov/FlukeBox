@@ -10,7 +10,7 @@
         public long ItemsLeftToDo { get; }
         public string Status { get; }
 
-        public string ToString() {
+        public override string ToString() {
             return $"{nameof(ProgressReport)}[{ItemsDone}/{ItemsLeftToDo} - {Status}]";
         }
     }
