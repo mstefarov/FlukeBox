@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using FlukeBox.Jobs;
+using FlukeBox.MusicLibrary;
 using FlukeBox.Models;
 using FlukeBox.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace FlukeBox.Controllers {
     [Route("api/[controller]")]
     public class LibraryController : Controller {
-        private readonly IJobRegistry jobs;
+        private readonly IJobRegistry _jobs;
+        private readonly IMetadataRepo _repo;
 
-        public LibraryController(IJobRegistry jobs) {
-            this.jobs = jobs;
+        public LibraryController(IJobRegistry jobs, IMetadataRepo repo) {
+            _jobs = jobs;
+            _repo = repo;
         }
 
         [HttpPost("rescan")]
         public JsonResult Rescan() {
-            IJob job = jobs.Create("Rescan", RescanMetadataJob);
+            IJob job = _jobs.Create("Rescan", RescanMetadataJob);
             job.Run();
             return Json(job);
         }

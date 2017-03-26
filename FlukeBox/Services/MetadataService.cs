@@ -14,7 +14,7 @@ namespace FlukeBox.Services {
 
                 Tag tag = file.Tag;
                 return new TrackFull {
-                    ID = id,
+                    Id = id,
                     TrackNumber = tag.Track,
                     FileName = Path.GetFileName(path),
                     Title = tag.Title,
@@ -32,9 +32,9 @@ namespace FlukeBox.Services {
 
         private MediaFormat IdentifyFormat(File file) {
             if (file is TagLib.Mpeg.AudioFile) {
-                return MediaFormat.MP3;
+                return MediaFormat.Mp3;
             } else if (file is TagLib.Flac.File) {
-                return MediaFormat.FLAC;
+                return MediaFormat.Flac;
             } else if (file is TagLib.Ogg.File) {
                 return MediaFormat.OggVorbis;
             } else if (file is TagLib.Riff.File) {

@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.WebUtilities;
 
-namespace FlukeBox
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
+namespace FlukeBox {
+    public class Program {
+        public static void Main(string[] args) {
             var currentDirectory = Directory.GetCurrentDirectory();
             var host = new WebHostBuilder()
                 .UseKestrel()
@@ -23,5 +14,7 @@ namespace FlukeBox
 
             host.Run();
         }
+
+        public static string Version { get; } = "0.1.0";
     }
 }

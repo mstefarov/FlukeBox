@@ -1,9 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace FlukeBox.Models {
+﻿namespace FlukeBox.Models {
     public class TrackFull : TrackLight{
-        public long RootID { get; set; }
-
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public long LastModified { get; set; }

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FlukeBox.Models
+﻿namespace FlukeBox.Models
 {
     public enum MediaFormat : byte
     {
         Unknown,
-        MP3,
+        Mp3,
         OggVorbis,
         OggOpus,
         Wave,
-        FLAC,
+        Flac,
     }
 }
